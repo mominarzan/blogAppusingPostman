@@ -1,6 +1,7 @@
 const express= require("express");
 const mongoose = require("mongoose");
 const Article = require('./model/article')
+const Login = require('./model/login')
 
 const app = express();
 app.use(express.json());
@@ -19,6 +20,7 @@ app.get('/', async (req, res) => {
     res.json('home');
     
 })
+
 
 app.post('/createblog', async (req, res) => {
     const create = new Article({
@@ -55,8 +57,13 @@ app.get('/displayblog', async (req, res) => {
 
 app.delete('/del/:id', async(req,res)=>{
     let delid= req.params.id;
-    Article.findByOneAndDelete(({id:delid}),function(err,docs){
+    Article.findOneAndDelete(({id:delid}),function(err,docs){
+        if(docs==null){
+            res.json("Wrong ID!!!")
+        }
+        else{
         res.json(docs); 
+        }
 
     })
 
